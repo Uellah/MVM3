@@ -1,17 +1,24 @@
 import numpy as np
 from utils import out_to_file
 from task import *
-X = 2.
-Y = 2.
+
+
 
 class Solver:
-    def __init__(self, Nx, Ny):
+    def __init__(self):
         self.Nx = Nx
         self.Ny = Ny
-        self.p = np.zeros((self.Ny, self.Nx))
         self.h_x = X / (self.Nx - 1)
         self.h_y = Y / (self.Ny - 1)
+        self.Pe = 1
+
+        self.p = np.zeros((self.Ny, self.Nx))
+        self.v1 = v1
+        self.v2 = v2
+
         self.reverse_sq = (1 / np.power(self.h_x, 2) + 1 / np.power(self.h_y, 2))*2.
+        self.reverse_hx = 1/self.h_x
+        self.reverse_hy = 1/self.h_y
 
     def init(self):
         for j in range(self.Nx):
@@ -36,12 +43,24 @@ class Solver:
     def der_yy(self, i, j):
         return (self.p[i+1, j] + self.p[i-1, j])/np.power(self.h_y, 2)
 
-# дна из возможных проблем перепутаны i, j в f!!!
+    def Dx(self, i, j):
+        if self.v1[i, j] > 0:
+            return  self.v1[i, j] * self.p[i, j - 1] / self.v1[i, j] * self.h_x, self.reverse_hx
+        return self.v1[i, j] * (-self.p[i, j + 1]) / self.h_x, self.v1[i, j] * (-self.reverse_hx)
+
+    def Dy(self, i, j):
+        if self.v2[i, j] > 0:
+            return self.v2[i, j] * self.p[i - 1, j] / self.h_y, self.v2[i, j] * self.reverse_hy
+        return self.v2[i, j] *  (-self.p[i + 1, j]) / self.h_y,self.v2[i, j] *  (-self.reverse_hy)
+
+    # одна из возможных проблем перепутаны i, j в f!!!
     def A(self, i, j):
-        return (self.der_xx(i, j) + self.der_yy(i, j) + self.get_grid_func(f, j, i)) / self.reverse_sq
+        dx = self.Dx(i, j)
+        dy = self.Dy(i, j)
+        return (self.der_xx(i, j) + self.der_yy(i, j) + self.Pe * (self.get_grid_func(f, j, i) + dx[0] + dy[0])) / (self.reverse_sq + dx[1] +dy[1])
 
     def solve(self):
-        for iter in range(0, 100):
+        for iter in range(0, 500):
             for j in range(self.Nx - 2, 0, -1):
                 for i in range(1, self.Ny - 1):
                     self.p[i, j] = self.A(i, j)
