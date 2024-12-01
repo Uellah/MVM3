@@ -11,7 +11,6 @@ class Solver:
         self.p = np.zeros((self.Ny, self.Nx))
         self.h_x = X / (self.Nx - 1)
         self.h_y = Y / (self.Ny - 1)
-        self.reverse_sq = (1 / np.power(self.h_x, 2) + 1 / np.power(self.h_y, 2))*2.
 
     def init(self):
         for j in range(self.Nx):
@@ -37,7 +36,8 @@ class Solver:
         return (self.p[i+1, j] + self.p[i-1, j])/np.power(self.h_y, 2)
 
     def A(self, i, j):
-        return (self.der_xx(i, j) + self.der_yy(i, j) + self.get_grid_func(f, i, j)) / self.reverse_sq
+        return ((self.der_xx(i, j) + self.der_yy(i, j) + self.get_grid_func(f, i, j))
+                /(1/np.power(self.h_x, 2) + 1/np.power(self.h_y, 2))/2)
 
     def solve(self):
         for iter in range(0, 500):
