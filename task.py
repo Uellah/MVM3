@@ -1,6 +1,6 @@
 import numpy as np
-X = 1
-Y = 1
+X = 2
+Y = 2
 
 Ny = 50
 Nx = 25
