@@ -1,8 +1,9 @@
 import numpy as np
-from utils import out_to_file
-from task import *
-
-
+from utils import OutToFile
+import time
+import matplotlib.pyplot as plt
+import os
+from task4 import *
 
 class Solver:
     def __init__(self):
@@ -26,13 +27,12 @@ class Solver:
         for i in range(self.Ny):
             self.p[i, 0] = self.get_grid_func(g_l, 0, i)
             self.p[i, self.Nx - 1] = self.get_grid_func(g_r, 0, i)
-        print(self.p)
 
     def get_grid_func(self, func, i, j):
         return func(i * self.h_x, j * self.h_y)
 
     def out(self):
-        o = out_to_file('out_p')
+        o = OutToFile('out_'+ str(TaskNumber))
         o.write_numpy_to_csv(self.p)
 
     def der_xx(self, i, j):
@@ -59,9 +59,38 @@ class Solver:
         dy = self.Dy(i, j)
         return (self.der_xx(i, j) + self.der_yy(i, j) + self.Pe * (self.get_grid_func(f, j, i) + dx[0] + dy[0])) / (self.reverse_sq + dx[1] +dy[1])
 
-    def solve(self):
-        for iter in range(0, 500):
+    def solve(self, tol=1e-2, max_time=10):
+        start_time = time.time()
+        iter = 0
+
+        while True:
+            s = 0
             for j in range(self.Nx - 2, 0, -1):
                 for i in range(1, self.Ny - 1):
+                    old = self.p[i, j]
                     self.p[i, j] = self.A(i, j)
-        print(np.round(self.p,2))
+                    s += np.power(self.p[i, j] - old, 2)
+
+            if np.sqrt(s) < tol:
+                print(f"Сошелся за {iter} итераций.")
+                break
+
+            if time.time() - start_time > max_time:
+                print(f"Остановился по истечении {max_time} секунд. \n  Точность: {np.round(np.sqrt(s), 2)}")
+                break
+
+            iter += 1
+
+    def plot_heatmap(self):
+        """
+        Plot a heatmap of the temperature distribution.
+        """
+        plt.figure(figsize=(8, 6))
+        plt.imshow(self.p, extent=[0, X, 0, Y], origin='lower', cmap='inferno', aspect='auto')
+        plt.colorbar(label='Температура')
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title('Распределение температуры')
+        output_path = os.path.join('out_im', 'heatmap_' + str(TaskNumber) +'.png')
+        plt.savefig(output_path)
+        plt.show()

@@ -2,7 +2,7 @@ import os
 import numpy as np
 import csv
 
-class out_to_file:
+class OutToFile:
     def __init__(self, filename):
         self.filename = filename
 
@@ -19,11 +19,18 @@ class out_to_file:
         with open(self.filepath, 'a') as file:
             file.write(content + "\n")
 
-    def write_numpy_to_csv(self, array):
+    def write_numpy_to_csv(self, array, precision=2):
+        """
+        Writes a numpy array to a CSV file with specified precision.
+
+        :param array: Numpy array to write.
+        :param precision: Number of decimal places to round to.
+        """
         if not isinstance(array, np.ndarray):
             raise ValueError("Input must be a numpy array")
-        array = np.round(array, 2)
+
         with open(self.filepath, 'w', newline='') as file:
             writer = csv.writer(file)
             for row in array:
-                writer.writerow(row)
+                rounded_row = [round(val, precision) for val in row]
+                writer.writerow(rounded_row)
