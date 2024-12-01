@@ -3,7 +3,7 @@ from utils import OutToFile
 import time
 import matplotlib.pyplot as plt
 import os
-from task4 import *
+from task2 import *
 
 class Solver:
     def __init__(self):
@@ -11,7 +11,7 @@ class Solver:
         self.Ny = Ny
         self.h_x = X / (self.Nx - 1)
         self.h_y = Y / (self.Ny - 1)
-        self.Pe = 1
+        self.Pe = 1.3
 
         self.p = np.zeros((self.Ny, self.Nx))
 
@@ -57,7 +57,7 @@ class Solver:
     def A(self, i, j):
         dx = self.Dx(i, j)
         dy = self.Dy(i, j)
-        return (self.der_xx(i, j) + self.der_yy(i, j) + self.Pe * (self.get_grid_func(f, j, i) + dx[0] + dy[0])) / (self.reverse_sq + dx[1] +dy[1])
+        return (self.der_xx(i, j) + self.der_yy(i, j) + self.Pe * (self.get_grid_func(f, j, i) + dx[0] + dy[0])) / (self.reverse_sq + self.Pe * (dx[1] +dy[1]))
 
     def solve(self, tol=1e-2, max_time=10):
         start_time = time.time()
@@ -94,3 +94,8 @@ class Solver:
         output_path = os.path.join('out_im', 'heatmap_' + str(TaskNumber) +'.png')
         plt.savefig(output_path)
         plt.show()
+
+    def do_all(self):
+        self.init()
+        self.solve()
+        self.plot_heatmap()

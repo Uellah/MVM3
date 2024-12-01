@@ -13,6 +13,7 @@ def u_an(x, y):
 
 def f(x, y):
     return x + y
+
 # лишние переменные обьявлены для универсальности реализации получения сеточной аппроксимации
 def g_l(x, y):
     return y
@@ -28,6 +29,7 @@ def g_up(x, y):
 
 def v1(x, y):
     return x
+
 def v2(x, y):
     return y
 
