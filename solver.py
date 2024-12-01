@@ -3,7 +3,7 @@ from utils import OutToFile
 import time
 import matplotlib.pyplot as plt
 import os
-from task2 import *
+from task3 import *
 
 class Solver:
     def __init__(self):
@@ -11,7 +11,7 @@ class Solver:
         self.Ny = Ny
         self.h_x = X / (self.Nx - 1)
         self.h_y = Y / (self.Ny - 1)
-        self.Pe = 1.3
+        self.Pe = 1.
 
         self.p = np.zeros((self.Ny, self.Nx))
 
