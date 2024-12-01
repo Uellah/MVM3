@@ -20,10 +20,8 @@ def g_down(x, y):
 def g_up(x, y):
     return x+1
 
-# def v1(x, y):
-#     return 1.
-# def v2(x, y):
-#     return 1.
+def v1(x, y):
+    return 1.
+def v2(x, y):
+    return 1.
 
-v1 = np.ones((Ny, Nx))
-v2 = np.ones((Ny, Nx))

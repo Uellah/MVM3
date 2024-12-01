@@ -13,8 +13,6 @@ class Solver:
         self.Pe = 1
 
         self.p = np.zeros((self.Ny, self.Nx))
-        self.v1 = v1
-        self.v2 = v2
 
         self.reverse_sq = (1 / np.power(self.h_x, 2) + 1 / np.power(self.h_y, 2))*2.
         self.reverse_hx = 1/self.h_x
@@ -44,14 +42,16 @@ class Solver:
         return (self.p[i+1, j] + self.p[i-1, j])/np.power(self.h_y, 2)
 
     def Dx(self, i, j):
-        if self.v1[i, j] > 0:
-            return  self.v1[i, j] * self.p[i, j - 1] / self.v1[i, j] * self.h_x, self.reverse_hx
-        return self.v1[i, j] * (-self.p[i, j + 1]) / self.h_x, self.v1[i, j] * (-self.reverse_hx)
+        v1_ = self.get_grid_func(v1, j, i)
+        if v1_ > 0:
+            return  v1_ * self.p[i, j - 1] / self.h_x, v1_ * self.reverse_hx
+        return v1_ * (-self.p[i, j + 1]) / self.h_x, v1_ * (-self.reverse_hx)
 
     def Dy(self, i, j):
-        if self.v2[i, j] > 0:
-            return self.v2[i, j] * self.p[i - 1, j] / self.h_y, self.v2[i, j] * self.reverse_hy
-        return self.v2[i, j] *  (-self.p[i + 1, j]) / self.h_y,self.v2[i, j] *  (-self.reverse_hy)
+        v2_ = self.get_grid_func(v2, j, i)
+        if v2_ > 0:
+            return v2_ * self.p[i - 1, j] / self.h_y,  v2_ * self.reverse_hy
+        return v2_ *  (-self.p[i + 1, j]) / self.h_y,  v2_ * (-self.reverse_hy)
 
     # одна из возможных проблем перепутаны i, j в f!!!
     def A(self, i, j):
