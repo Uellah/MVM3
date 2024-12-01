@@ -11,7 +11,7 @@ class Solver:
         self.p = np.zeros((self.Ny, self.Nx))
         self.h_x = X / (self.Nx - 1)
         self.h_y = Y / (self.Ny - 1)
-        self.reverse_sq = (1 / np.power(self.h_x, 2) + 1 / np.power(self.h_y, 2))/2.
+        self.reverse_sq = (1 / np.power(self.h_x, 2) + 1 / np.power(self.h_y, 2))*2.
 
     def init(self):
         for j in range(self.Nx):
