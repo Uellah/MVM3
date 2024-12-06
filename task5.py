@@ -1,34 +1,27 @@
 import numpy as np
 
-TaskNumber = 3
+TaskNumber = 5
 
 X = 3
 Y = 3
 
-Nx = 40
-Ny = 40
-
-def u_an(x, y):
-    return x + 1
-
 def f(x, y):
-    return x**2 + y**2
+    return -4 * ((x - 1.5)**2 + (y - 1.5)**2 - 0.8)**2 + 1.5
 
-# лишние переменные обьявлены для универсальности реализации получения сеточной аппроксимации
 def g_l(x, y):
-    return 1
+    return 0  # Граничное условие слева
 
 def g_r(x, y):
-    return 4
+    return 0  # Граничное условие справа
 
 def g_down(x, y):
-    return x + 1
+    return 0  # Граничное условие снизу
 
 def g_up(x, y):
-    return x + 1
+    return 0  # Граничное условие сверху
 
 def v1(x, y):
-    return np.sin(x)
-def v2(x, y):
-    return np.cos(x)
+    return 0
 
+def v2(x, y):
+    return 0

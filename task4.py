@@ -5,8 +5,6 @@ TaskNumber = 4
 X = 2
 Y = 2
 
-Nx = 41
-Ny = 41
 
 def f(x, y):
     return x + y

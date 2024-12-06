@@ -5,8 +5,6 @@ TaskNumber = 3
 X = 3
 Y = 3
 
-Nx = 40
-Ny = 40
 
 def u_an(x, y):
     return x + 1
